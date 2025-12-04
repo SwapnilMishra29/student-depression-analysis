@@ -1,97 +1,148 @@
+
 import streamlit as st
 import numpy as np
 import pandas as pd
 import joblib
 from PIL import Image
 
-# ----------------------------
-# Configure Streamlit App
-# ----------------------------
+# -------------------------------------------------
+# Streamlit Page Configuration
+# -------------------------------------------------
 st.set_page_config(page_title="Student Depression Predictor", page_icon="🧠", layout="wide")
 
-# Load trained model
+# Load Model
 @st.cache_resource
 def load_model():
-    return joblib.load("AdaBoost_model.pkl")  # Load your trained model
+    return joblib.load("AdaBoost_model.pkl")
 
 model = load_model()
 
-# ----------------------------
+# -------------------------------------------------
+# Custom CSS for Modern UI
+# -------------------------------------------------
+st.markdown(
+    """
+    <style>
+    body {background: linear-gradient(135deg, #E3F3FF 0%, #FFFFFF 100%);}    
+
+    .main-title {
+        font-size: 48px;
+        font-weight: 800;
+        text-align: center;
+        color: #2E8B57;
+        margin-top: 10px;
+    }
+
+    .sub-title {
+        font-size: 20px;
+        text-align: center;
+        color: #555;
+        margin-bottom: 20px;
+    }
+
+    .glass-card {
+        background: rgba(255, 255, 255, 0.45);
+        backdrop-filter: blur(12px);
+        padding: 25px;
+        border-radius: 20px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+        margin-bottom: 25px;
+    }
+
+    .predict-button button {
+        background: linear-gradient(to right, #2E8B57, #3CB371);
+        color: white;
+        font-size: 18px !important;
+        font-weight: 600;
+        height: 3.2em;
+        border-radius: 12px;
+        transition: 0.3s ease;
+    }
+    .predict-button button:hover {
+        transform: scale(1.03);
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
+# -------------------------------------------------
 # Sidebar
-# ----------------------------
+# -------------------------------------------------
 with st.sidebar:
-    st.title("🧠 Student Depression Predictor")
-    st.markdown("Predict the likelihood of depression in students.")
+    st.image("https://cdn-icons-png.flaticon.com/512/3209/3209995.png", width=120)
+    st.title("🧠 Depression Predictor")
+    st.markdown("Use lifestyle and behavioral data to estimate depression likelihood.")
     st.markdown("---")
-    st.markdown("👨‍💻 Developed by: **Brajesh Ahirwar**")
-    st.markdown("🔗 GitHub: [Brajesh Ahirwar](https://github.com/brajesh2306)")
-    st.markdown("🔗 LinkedIn: [Profile](www.linkedin.com/in/brajesh-ahirwar-6269b728b)")
+    st.markdown("👨‍💻 Developer: **Swapnil Mishra**")
+    st.markdown("🔗 GitHub: [Swapnil Mishra](https://github.com/SwapnilMishra29)")
+    st.markdown("🔗 LinkedIn: [Profile](https://www.linkedin.com/in/swapnil-mishra70/)")
     st.markdown("---")
-    st.markdown("✨ **Have fun exploring AI!**")
+    st.markdown("✨ Explore the power of AI!")
 
-# ----------------------------
-# Header
-# ----------------------------
-st.markdown("<h1 style='text-align: center; color: #2E8B57;'>Student Depression Prediction 🧠</h1>", unsafe_allow_html=True)
-st.markdown("<h3 style='text-align: center; color: #808080;'>Enter the student's lifestyle and habits below</h3>", unsafe_allow_html=True)
+# -------------------------------------------------
+# Header Section
+# -------------------------------------------------
+st.markdown("<h1 class='main-title'>Student Depression Prediction 🧠</h1>", unsafe_allow_html=True)
+st.markdown("<h3 class='sub-title'>Fill in the student's lifestyle & academic details</h3>", unsafe_allow_html=True)
 
-# background image
-image = Image.open('Artificial Intelligence Application in Mental Health Research copy.jpg')
-st.image(image, use_container_width=True)
-
+st.image('Artificial Intelligence Application in Mental Health Research copy.jpg', use_container_width=True)
 st.markdown("<hr>", unsafe_allow_html=True)
-st.markdown("#### Please provide the student details below:")
 
-# ----------------------------
-# Input Form using Columns
-# ----------------------------
+# -------------------------------------------------
+# Glassmorphic Input Form
+# -------------------------------------------------
+st.markdown("<div class='glass-card'>", unsafe_allow_html=True)
+st.markdown("### 📋 Student Details Form")
+
 col1, col2 = st.columns(2)
 
 with col1:
-    id_val = st.number_input("Student ID (any numeric value)", min_value=0, step=1)
+    id_val = st.number_input("Student ID", min_value=0, step=1)
     gender = st.radio("Gender", ["Male", "Female"])
-    age = st.number_input("Age", min_value=1, max_value=120, step=1)
+    age = st.number_input("Age", min_value=1, max_value=120)
     city = st.text_input("City")
     profession = st.text_input("Profession")
     academic_pressure = st.slider("Academic Pressure (1-5)", 1.0, 5.0, 3.0)
     study_satisfaction = st.slider("Study Satisfaction (1-5)", 1.0, 5.0, 3.0)
-    sleep_duration = st.selectbox("Sleep Duration", ["Less than 5 hours", "5-6 hours", "7-8 hours", "More than 8 hours"])
+    sleep_duration = st.selectbox("Sleep Duration", [
+        "Less than 5 hours", "5-6 hours", "7-8 hours", "More than 8 hours"
+    ])
 
 with col2:
     dietary_habits = st.radio("Dietary Habits", ["Healthy", "Unhealthy"])
-    suicidal_thoughts = st.radio("Ever had suicidal thoughts?", ["Yes", "No"])
-    work_pressure = st.slider("Work Pressure (1-5)", 0.0, 5.0, 0.0)
+    suicidal_thoughts = st.radio("Suicidal thoughts?", ["Yes", "No"])
+    work_pressure = st.slider("Work Pressure (1-5)", 0.0, 5.0)
     financial_stress = st.slider("Financial Stress (1-5)", 1, 5, 3)
-    family_history = st.radio("Family history of mental illness?", ["Yes", "No"])
-    job_satisfaction = st.slider("Job Satisfaction (1-5)", 0.0, 5.0, 0.0)
-    study_pressure_hours = st.number_input("Work/Study Hours per week", min_value=0, max_value=24, step=1)
+    family_history = st.radio("Family History of Illness?", ["Yes", "No"])
+    job_satisfaction = st.slider("Job Satisfaction (1-5)", 0.0, 5.0)
+    study_pressure_hours = st.number_input("Study/Work Hours per Week", min_value=0, max_value=24)
     cgpa = st.number_input("CGPA", min_value=0.0, max_value=10.0, step=0.01)
     degree = st.text_input("Degree")
 
-# ----------------------------
-# Mapping categorical to numeric
-# ----------------------------
+st.markdown("</div>", unsafe_allow_html=True)
+
+# -------------------------------------------------
+# Category Mapping
+# -------------------------------------------------
 gender = 1 if gender == 'Male' else 0
 dietary_habits = 1 if dietary_habits == 'Healthy' else 0
 suicidal_thoughts = 1 if suicidal_thoughts == 'Yes' else 0
 family_history = 1 if family_history == 'Yes' else 0
 
-sleep_mapping = {
-    'Less than 5 hours': 4,
-    '5-6 hours': 5.5,
-    '7-8 hours': 7.5,
-    'More than 8 hours': 9
-}
-sleep_duration = sleep_mapping.get(sleep_duration, 7.5)
+sleep_map = {'Less than 5 hours': 4, '5-6 hours': 5.5, '7-8 hours': 7.5, 'More than 8 hours': 9}
+sleep_duration = sleep_map[sleep_duration]
 
-# ----------------------------
-# Create Input DataFrame (17 Features)
-# ----------------------------
-columns = ['id', 'Gender', 'Age', 'City', 'Profession', 'Academic Pressure',
-           'Work Pressure', 'CGPA', 'Study Satisfaction', 'Job Satisfaction',
-           'Sleep Duration', 'Dietary Habits', 'Degree',
-           'Have you ever had suicidal thoughts ?', 'Work/Study Hours',
-           'Financial Stress', 'Family History of Mental Illness']
+# -------------------------------------------------
+# Create Input DataFrame
+# -------------------------------------------------
+columns = [
+    'id', 'Gender', 'Age', 'City', 'Profession', 'Academic Pressure',
+    'Work Pressure', 'CGPA', 'Study Satisfaction', 'Job Satisfaction',
+    'Sleep Duration', 'Dietary Habits', 'Degree',
+    'Have you ever had suicidal thoughts ?', 'Work/Study Hours',
+    'Financial Stress', 'Family History of Mental Illness'
+]
 
 input_df = pd.DataFrame([[id_val, gender, age, city, profession, academic_pressure,
                           work_pressure, cgpa, study_satisfaction, job_satisfaction,
@@ -99,49 +150,38 @@ input_df = pd.DataFrame([[id_val, gender, age, city, profession, academic_pressu
                           study_pressure_hours, financial_stress, family_history]],
                         columns=columns)
 
-# ----------------------------
-# Stylish Predict Button
-# ----------------------------
-button_style = """
-<style>
-.stButton>button {
-    background-color: #2E8B57;
-    color: white;
-    font-size: 16px;
-    height: 3em;
-    width: 100%;
-    border-radius: 12px;
-    transition: background-color 0.3s ease;
-}
-.stButton>button:hover {
-    background-color: #3CB371;
-}
-</style>
-"""
-st.markdown(button_style, unsafe_allow_html=True)
+# -------------------------------------------------
+# Prediction Button
+# -------------------------------------------------
+st.markdown("<div class='predict-button'>", unsafe_allow_html=True)
+predict = st.button("🔮 Predict Depression Level")
+st.markdown("</div>", unsafe_allow_html=True)
 
-# ----------------------------
-# Prediction Logic
-# ----------------------------
-if st.button("Predict"):
-    with st.spinner("Predicting..."):
+# -------------------------------------------------
+# Prediction Output
+# -------------------------------------------------
+if predict:
+    with st.spinner("Analyzing student data..."):
         try:
-            prediction_proba = model.predict_proba(input_df)
-            depression_prob = prediction_proba[0][1]  # probability of depression
+            proba = model.predict_proba(input_df)
+            depression_prob = proba[0][1]
 
-            # Conditional messages based on probability
+            st.markdown("<div class='glass-card'>", unsafe_allow_html=True)
+            st.subheader("📊 Prediction Result")
+
             if depression_prob < 0.2:
-                st.markdown(f"<h3 style='color:green;'>Very unlikely to have depression.</h3>", unsafe_allow_html=True)
-            elif 0.2 <= depression_prob < 0.4:
-                st.markdown(f"<h3 style='color:green;'>Unlikely to have depression.</h3>", unsafe_allow_html=True)
-            elif 0.4 <= depression_prob < 0.6:
-                st.markdown(f"<h3 style='color:orange;'>May have depression.</h3>", unsafe_allow_html=True)
-            elif 0.6 <= depression_prob < 0.8:
-                st.markdown(f"<h3 style='color:orange;'>Likely to have depression.</h3>", unsafe_allow_html=True)
+                st.success("🟢 Very unlikely to have depression.")
+            elif depression_prob < 0.4:
+                st.success("🟢 Unlikely to have depression.")
+            elif depression_prob < 0.6:
+                st.warning("🟠 May have depression.")
+            elif depression_prob < 0.8:
+                st.warning("🟠 Likely to have depression.")
             else:
-                st.markdown(f"<h3 style='color:red;'>Highly likely to have depression.</h3>", unsafe_allow_html=True)
+                st.error("🔴 Highly likely to have depression.")
 
-            st.write(f"Depression Probability: {depression_prob*100:.2f}%")
+            st.metric("Depression Probability", f"{depression_prob*100:.2f}%")
+            st.markdown("</div>", unsafe_allow_html=True)
 
         except Exception as e:
-            st.error(f"Error during prediction: {e}")
+            st.error(f"An error occurred during prediction: {e}")
